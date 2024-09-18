@@ -1,10 +1,9 @@
 class ListsController < ApplicationController
-  before_action :set_list, only: [ :show, :update, :destroy ]
+  before_action :set_list, only: [:show, :update, :destroy]
 
   # GET /lists
   def index
     @lists = List.all
-
     render json: @lists, include: :items
   end
 
@@ -16,7 +15,6 @@ class ListsController < ApplicationController
   # POST /lists
   def create
     @list = List.new(list_params)
-
     if @list.save
       render json: @list, status: :created
     else
