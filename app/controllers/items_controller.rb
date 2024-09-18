@@ -26,6 +26,11 @@ class ItemsController < ApplicationController
     @item = Item.new(item_params)
     @item.list_id = params[:list_id]
 
+    # Ajustar a data para o fuso horário local
+    if @item.date.present?
+      @item.date = @item.date.in_time_zone(Time.zone).to_date
+    end
+
     if @item.save
       render json: @item, status: :created
     else
@@ -33,20 +38,16 @@ class ItemsController < ApplicationController
     end
   end
 
+
   # PATCH/PUT /lists/:list_id/items/:id
   def update
-    if params[:item][:list_id] && params[:item][:list_id] != @item.list_id
-      # Mover o item para uma nova lista
-      new_list = List.find(params[:item][:list_id])
-      @item.update(list: new_list) # Atualizar o list_id
-    end
-
-    if @item.update(item_params.except(:list_id)) # Atualizar outros atributos
+    if @item.update(item_params)
       render json: @item
     else
       render json: @item.errors, status: :unprocessable_entity
     end
   end
+
 
   # DELETE /lists/:list_id/items/:id
   def destroy

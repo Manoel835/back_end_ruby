@@ -12,15 +12,17 @@ class ListsController < ApplicationController
     render json: @list, include: :items
   end
 
-  # POST /lists
-  def create
-    @list = List.new(list_params)
-    if @list.save
-      render json: @list, status: :created
-    else
-      render json: @list.errors, status: :unprocessable_entity
+    # POST /lists/:list_id/items
+    def create
+      @list = List.new(list_params) # Crie uma nova lista usando list_params
+
+      if @list.save
+        render json: @list, status: :created
+      else
+        render json: @list.errors, status: :unprocessable_entity
+      end
     end
-  end
+
 
   # PATCH/PUT /lists/:id
   def update
